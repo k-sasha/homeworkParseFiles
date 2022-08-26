@@ -24,11 +24,11 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String [] employee1 = "1,John,Smith,USA,25".split(",");
-        String [] employee2 = "2,Inav,Petrov,RU,23".split(",");
-        List<String []> list0 = Arrays.asList(employee1, employee2);
+        String[] employee1 = "1,John,Smith,USA,25".split(",");
+        String[] employee2 = "2,Inav,Petrov,RU,23".split(",");
+        List<String[]> list0 = Arrays.asList(employee1, employee2);
 
-        try(CSVWriter writer = new CSVWriter(new FileWriter("data.csv"))){
+        try (CSVWriter writer = new CSVWriter(new FileWriter("data.csv"))) {
             writer.writeAll(list0);
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -108,29 +108,38 @@ public class Main {
                 Employee emp = new Employee();
                 Element element = (Element) node;
                 NamedNodeMap map = element.getAttributes();
-                for (int a = 0; a < map.getLength(); a++) {
-                    String attrName = map.item(a).getNodeName();
-                    String attrValue = map.item(a).getNodeValue();
-                    switch (attrName) {
-                        case "id":
-                            emp.setId(Long.parseLong(attrValue));
-                            break;
-                        case "firstName":
-                            emp.setFirstName(attrValue);
-                            break;
-                        case "lastName":
-                            emp.setLastName(attrValue);
-                            break;
-                        case "country":
-                            emp.setCountry(attrValue);
-                            break;
-                        default:
-                            emp.setAge(Integer.parseInt(attrValue));
-                    }
-                }
+                setAttributesToEmployee(map, emp);
+
                 employees.add(emp);
                 readNodes(node, employees);
             }
+        }
+    }
+
+    public static void setAttributesToEmployee(NamedNodeMap map, Employee emp) {
+        for (int a = 0; a < map.getLength(); a++) {
+            String attrName = map.item(a).getNodeName();
+            String attrValue = map.item(a).getNodeValue();
+            choiceAttributesName(attrName, attrValue, emp);
+        }
+    }
+
+    public static void choiceAttributesName(String attrName, String attrValue, Employee emp) {
+        switch (attrName) {
+            case "id":
+                emp.setId(Long.parseLong(attrValue));
+                break;
+            case "firstName":
+                emp.setFirstName(attrValue);
+                break;
+            case "lastName":
+                emp.setLastName(attrValue);
+                break;
+            case "country":
+                emp.setCountry(attrValue);
+                break;
+            default:
+                emp.setAge(Integer.parseInt(attrValue));
         }
     }
 
